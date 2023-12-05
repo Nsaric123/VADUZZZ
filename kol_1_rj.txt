@@ -1,0 +1,20 @@
+def rodrigues(omega_hat, theta):
+    skew_omega_hat = skew(omega_hat)
+    return np.eye(3) + np.sin(theta) * skew_omega_hat + (1 - np.cos(theta)) * (skew_omega_hat @ skew_omega_hat)
+
+# opseg = 2*r*pi = 3*pi
+# 
+
+def angular_velocity(i, j_T_i):
+    if i < 360:
+        i_omega_i = np.array([0, np.pi, 0], dtype=float)
+    if i < 240:
+        i_omega_i = np.array([np.pi, 0, 0], dtype=float)
+    if i < 120:
+        i_omega_i = np.array([0, 0, np.pi], dtype=float)
+
+    return i_omega_i
+
+def transl_velocity(i, j_T_i, dt):
+    j_p_i_dot = (np.array([1.5*np.cos((i%120)*(2*np.pi/120)), 1.5*np.sin((i%120)*(2*np.pi/120)), 0], dtype=float) - j_T_i[:3, 3]) / dt
+    return j_p_i_dot
