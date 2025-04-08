@@ -1,3 +1,7 @@
+### Provjera Konveksnosti
+
+#primjer2 (vjezbe1)
+
 def f2(x1, x2, x3):
     return 3*x1**2 + 6*x2**2 + 8*x2*x3 + 12*x3**2
 
@@ -14,12 +18,9 @@ eigvals, eigvecs = np.linalg.eig(hess_f2)
 print(eigvals)
 is_psd = np.all(eigvals >= 0)
 print("Funckija je konveksna." if is_psd else "Funkcija nije konveksna.")
+ 
 
-
-
-
-import numpy as np
-import matplotlib.pyplot as plt
+### BISEKCIJA
 
 def f(x):
     return x/2 + 1/x
@@ -27,7 +28,7 @@ def f(x):
 [a0,b0] = [1,4]
 
 t = np.linspace(1, 4, 100)
-plt.plot(t, f(t)) 
+plt.plot(t, f(t))
 
 def gradf(x):
     return 1/2 - 1/x**2
@@ -60,7 +61,6 @@ k2 = int(np.ceil(np.log2((b0 - a0) / (eps / L))))
 x_star_k2 = metoda_bisekcije(gradf, a0, b0, k2)
 plt.plot(t, f(t), 'grey')
 
-
 def bisection_method_nograd(f, a0, b0, num_steps=100, delta=0.0005):
     ai = a0
     bi = b0
@@ -83,35 +83,10 @@ k = int(np.ceil(-np.log2(eps / (b0 - a0) - 2*delta)))
 x_star_k = bisection_method_nograd(f, a0, b0, k, delta=delta)
 plt.plot(t, f(t), 'grey')
 
-L = max(abs(gradf(a0)), abs(gradf(b0))) #Lipschitzova konstanta
-print('L =', L)
-k2 = int(np.ceil(np.log2((b0 - a0) / (eps / L))))
-
-x_star_k2 = metoda_bisekcije(gradf, a0, b0, k2)
-plt.plot(t, f(t), 'grey')
-
+#ostalo je sve isto
 
 #### ZLATNI REZ
-
-import matplotlib.pyplot as plt
-import numpy as np
-
-def f(x):
-    return abs(x - 1) + 2
-
-[a0, b0] = [0,3]
-
-t = np.linspace(a0, b0, 100)
-plt.plot(t, f(t))
-plt.show()
-
-zr = (np.sqrt(5) + 1) / 2
-
-x2i = b0 - (b0 - a0) / zr
-x2i1 = a0 + (b0 - a0) / zr
-plt.plot(t, f(t))
-plt.plot([x2i1, x2i], [f(x2i1), f(x2i)], '.')
-plt.show()
+zr = zr = (np.sqrt(5) + 1) / 2
 
 def zlatni_rez(f, a0, b0, num_steps=100):
     bi = b0
@@ -124,7 +99,6 @@ def zlatni_rez(f, a0, b0, num_steps=100):
     fx2i1 = f(x2i1)
     
     for _i in range(num_steps):
-        
         if fx2i < fx2i1:
             bi = x2i1
             x2i1 = x2i
@@ -142,32 +116,19 @@ def zlatni_rez(f, a0, b0, num_steps=100):
             
     return ai
 
+
+
+def f(x):
+    return abs(x - 1) + 2
+
+[a0, b0] = [0, 3]
+
+t = np.linspace(a0, b0, 100)
 x_star = zlatni_rez(f, a0, b0)
 plt.plot(t, f(t))
 plt.plot([x_star], [f(x_star)], '.')
-plt.show()
 
-#### NEWTON_SECANT
-
-import matplotlib.pyplot as plt
-import numpy as np
-
-def f(x):
-    return x**3 + 8*x**2 + 4
-
-[a0,b0] = [-5,5]
-x0 = 2
-
-t = np.linspace(a0, b0, 100)
-#plt.plot(t, f(t))
-#plt.show()
-
-def gradf(x):
-    return 3*x**2 + 16*x
-
-def hessf(x):
-    return 6*x + 16
-
+### NEWTON
 def newton(x0, f, gradf, hessf, num_steps=100):
     xi = x0
     for _i in range(num_steps):
@@ -176,17 +137,25 @@ def newton(x0, f, gradf, hessf, num_steps=100):
     
     return xi
 
+def f(x):
+    return x**3 + 8*x**2 + 4
+
+[a0,b0] = [-5,5]
+x0 = 2
+
+t = np.linspace(a0, b0, 100)
+
+def gradf(x):
+    return 3*x**2 + 16*x
+
+def hessf(x):
+    return 6*x + 16
+
 x_star = newton(x0, f, gradf, hessf, num_steps=3)
 plt.plot(t, f(t))
 plt.plot([x_star], [f(x_star)], 'x')
-plt.show()
 
-x0 = -4
-x_star = newton(x0, f, gradf, hessf, num_steps=3)
-plt.plot(t, f(t))
-plt.plot([x_star], [f(x_star)], 'x')
-plt.show()
-
+### SEKANTE
 def secant(x0, x1, f, gradf, num_steps=100):
     xim1 = x0
     xi = x1
@@ -197,18 +166,24 @@ def secant(x0, x1, f, gradf, num_steps=100):
         xi = xip1
     
     return xi
+
+def f(x):
+    return x**3 + 8*x**2 + 4
+
+[a0,b0] = [-5,5]
+x0 = 2
+
+t = np.linspace(a0, b0, 100)
+
 x0 = 2
 x1 = -2
 x_star = secant(x0, x1, f, gradf, num_steps=10)
 plt.plot(t, f(t))
 plt.plot([x_star], [f(x_star)], '.')
-plt.show()
 
-##### GRADIENT
 
-import numpy as np
-import matplotlib.pyplot as plt
-
+### GRADIENT
+#minimizacija norme na kvadrat
 A = np.array([
         [2,3],
         [1,3]
@@ -218,6 +193,9 @@ b = np.array([1, -1])
 def f(x):
     return np.linalg.norm(A@x - b)**2
 
+def g(x):
+    return 2*A.T@(A@x - b)
+
 x = np.linspace(-5,5, 100)
 y = np.linspace(-5,5, 100)
 X, Y = np.meshgrid(x, y)
@@ -225,9 +203,6 @@ X = X.reshape(-1)
 Y = Y.reshape(-1)
 Z = np.array([ f(np.array([x,y])) for (x,y) in zip(X,Y) ])
 plt.contour(X.reshape(100,100), Y.reshape(100,100), Z.reshape(100,100), levels=np.logspace(-3,6,15, base=3))
-
-def g(x):
-    return 2*A.T@(A@x - b)
 
 def gradient_method(x0, g, num_steps=100):
     step_size = 1/(2*np.linalg.norm(A.T@A))
@@ -242,8 +217,36 @@ x_star = gradient_method(x0, g)
 print(g(x_star))
 print(f(np.array([0,0])))
 print(x_star)
+plt.contour(X.reshape(100,100), Y.reshape(100,100), Z.reshape(100,100), levels=np.logspace(-3,6,15, base=3))
 plt.plot([x_star[0]], [x_star[1]], 'x')
-plt.show()
 
 def f(x):
     return np.exp(x[0] + 2) + np.exp(-x[0] + 2) + 2*np.exp(x[1] + 2) + np.exp(-x[1] + 2)
+
+def g(x):
+    return np.array([
+                np.exp(x[0]+2) - np.exp(-x[0]+2),
+                2*np.exp(x[1] + 2) - np.exp(-x[1]+2)
+            ])
+
+x = np.linspace(-5,5, 100)
+y = np.linspace(-5,5, 100)
+X, Y = np.meshgrid(x, y)
+X = X.reshape(-1)
+Y = Y.reshape(-1)
+Z = np.array([ f(np.array([x,y])) for (x,y) in zip(X,Y) ])
+plt.contour(X.reshape(100,100), Y.reshape(100,100), Z.reshape(100,100), levels=np.logspace(-3,6,15, base=3))
+
+def gradient_method_fixed(x0, g, num_steps=10000):
+    step_size = 0.0005
+    for _i in range(num_steps):
+        plt.plot([x0[0]], [x0[1]], '.')
+        x0 = x0 - step_size * g(x0)
+
+    return x0
+
+x0 = np.array([-5, -5])
+x_star = gradient_method_fixed(x0, g)
+print(x_star)
+plt.contour(X.reshape(100,100), Y.reshape(100,100), Z.reshape(100,100), levels=np.logspace(-3,6,15, base=3))
+plt.plot([x_star[0]], [x_star[1]], 'x')
