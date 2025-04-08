@@ -18,24 +18,21 @@ print("Funckija je konveksna." if is_psd else "Funkcija nije konveksna.")
 
 
 
-
 import numpy as np
 import matplotlib.pyplot as plt
 
-# primjer 1
 def f(x):
     return x/2 + 1/x
 
 [a0,b0] = [1,4]
 
-t = np.linspace(1,4,100)
-#plt.plot(t, f(t))
-#splt.show()
+t = np.linspace(1, 4, 100)
+plt.plot(t, f(t)) 
 
 def gradf(x):
     return 1/2 - 1/x**2
 
-def bisection_method(gradf, a0, b0, num_steps=100):
+def metoda_bisekcije(gradf, a0, b0, num_steps=100):
     ai = a0
     bi = b0
     for _i in range(num_steps):
@@ -47,28 +44,21 @@ def bisection_method(gradf, a0, b0, num_steps=100):
             bi = xi
     return ai
 
-x_star = bisection_method(gradf, a0, b0)
+x_star = metoda_bisekcije(gradf, a0, b0)
+plt.plot(t, f(t), 'grey')
 print('x_star =', x_star, 'f(x_star) =', f(x_star))
-plt.plot(t, f(t))
-#plt.plot(x_star, f(x_star), '.')
-plt.show()
 
-eps = 0.05
-k = int(np.ceil(-np.log2(eps / (b0 - a0))))
-x_star_k = bisection_method(gradf, a0, b0, k)
-print('|ai - x_star| =', abs(x_star_k - x_star))
-print('|f(ai) - f(x_star)| =', abs(f(x_star_k) - f(x_star)))
+eps = 0.05 #tocnost
+k = int(np.ceil(np.log2((b0 - a0) / eps))) # max broj koraka za eps
+x_star_k = metoda_bisekcije(gradf, a0, b0, k)
+plt.plot(t, f(t), 'grey')
 
-print('Za eps =', eps, 'trebamo k =', k, 'koraka najvise.')
-L = max(abs(gradf(a0)), abs(gradf(b0)))
+L = max(abs(gradf(a0)), abs(gradf(b0))) #Lipschitzova konstanta
 print('L =', L)
-k2 = int(np.ceil(-np.log2(eps/ L / abs(a0 - b0))))
-print('k2 =', k2)
-x_star_k2 = bisection_method(gradf, a0, b0, k2)
-print('|ai - x_star| =', abs(x_star_k2 - x_star))
-print('|f(ai) - f(x_star)| =', abs(f(x_star_k2) - f(x_star)))
+k2 = int(np.ceil(np.log2((b0 - a0) / (eps / L))))
 
-print()
+x_star_k2 = metoda_bisekcije(gradf, a0, b0, k2)
+plt.plot(t, f(t), 'grey')
 
 
 def bisection_method_nograd(f, a0, b0, num_steps=100, delta=0.0005):
@@ -91,19 +81,14 @@ eps = 0.05
 delta = 0.005
 k = int(np.ceil(-np.log2(eps / (b0 - a0) - 2*delta)))
 x_star_k = bisection_method_nograd(f, a0, b0, k, delta=delta)
-print('|ai - x_star| =', abs(x_star_k - x_star))
-print('|f(ai) - f(x_star)| =', abs(f(x_star_k) - f(x_star)))
+plt.plot(t, f(t), 'grey')
 
-plt.show()
-
-print('Za eps =', eps, 'trebamo k =', k, 'koraka najvise.')
-L = max(abs(gradf(a0)), abs(gradf(b0)))
+L = max(abs(gradf(a0)), abs(gradf(b0))) #Lipschitzova konstanta
 print('L =', L)
-k2 = int(np.ceil(-np.log2((eps/ abs(a0 - b0) - 2*delta))/L))
-print('k2 =', k2)
-x_star_k2 = bisection_method_nograd(f, a0, b0, k2)
-print('|ai - x_star| =', abs(x_star_k2 - x_star))
-print('|f(ai) - f(x_star)| =', abs(f(x_star_k2) - f(x_star)))
+k2 = int(np.ceil(np.log2((b0 - a0) / (eps / L))))
+
+x_star_k2 = metoda_bisekcije(gradf, a0, b0, k2)
+plt.plot(t, f(t), 'grey')
 
 
 #### ZLATNI REZ
